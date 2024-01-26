@@ -1,22 +1,25 @@
 import { useState } from "react";
+//import { useForm, SubmitHandler } from "react-hook-form";
 
 const Page1 = () =>{
 
     const [inputText, setInputText] = useState("");
     const [messageText, setMessageText] = useState("");
 
+
     const changeText = (e) =>{
         setInputText(e.target.value);
     }
     const onButton = () =>{
         // setSubmitText(inputText);
-        const regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        const regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
         if(inputText == null){
             setMessageText("メールアドレスを入力して下さい");
         }
         else if(!regex.test(inputText)){
             setMessageText("正しい形式でメールアドレスを入力してください");
         }
+        else setMessageText("正しいメールアドレスです")
     }
 
     return(
