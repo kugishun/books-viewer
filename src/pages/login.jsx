@@ -1,5 +1,5 @@
-const login =()=>{
+const Login =()=>{
 
 }
 
-export default login;
+export default Login;
