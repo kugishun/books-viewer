@@ -1,47 +1,54 @@
-import { useState } from "react";
+import { useState,useRef } from "react";
+import {useForm} from "react-hook-form";
+
 
 const Signup =()=>{
+    // const [email,setEmail] = useState();
+    // const [pass,setPass] = useState();
+    const { register, handleSubmit,formState: { errors } } = useForm();
+    const onSubmit = (data) =>alert(JSON.stringify(data));
 
-    const [userName, setUserName] = useState();
-    const [email,setEmail] = useState();
-    const [pass,setPass] = useState();
+    const fileInput = useRef<HTMLInputElement | null>(null);
+    const [fileName, setFileName] = useState("");
+    const [imageData, setImageData] = useState("");
 
-    const changeName = (e) =>{
-        setUserName(e.target.value);
-    }
-    const changeEmail =(e)=>{
-        setEmail(e.target.value);
-    }
-    const changePass =(e)=>{
-        setPass(e.target.value);
-    }
-
-    const onSignUp=()=>{
-        const data={
-            name: userName,
-            email: email,
-            password: pass
-        };
-
-        
-    }
 
     return(
         <>
-        <h1>This is signup page</h1>
-        <div className="userName">
-            <p className="userName-text">user name</p>
-            <input type="text" className="userName-input" onChange={changeName}></input>
-        </div>
-        <div className="email">
-            <p className="email-text">email</p>
-            <input type="email" className="email-input" onChange={changeEmail}></input>
-        </div>
-        <div className="passWord">
-            <p className="passWord-text">pass word</p>
-            <input type="password" className="passWord-input" onChange={changePass}></input>
-        </div>
-        <input type="button" className="button" value="Sign Up" onClick={onSignUp}/>
+        <h1>This is SignUp page</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="userName">
+                <p className="userName-text">user name</p>
+                <input type="text" className="userName-input" {...register('name',{
+                    required: {value: true,
+                        message:<p>ユーザー名の登録は必須です。</p>},
+                    onChange: (e)=>console.log(e)
+                })}/>
+                <p>{errors.name && errors.name.message}</p>
+            </div>
+            <div className="email">
+                <p className="email-text">email</p>
+                <input type="email" className="email-input" {...register('email',{
+                    required: "メールアドレスを入力してください。",
+                    pattern: {
+                        value: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                        message:"メールアドレスが正しい形式ではないです。"}
+                })}/>
+                <p>{errors.email && errors.email.message}</p>
+            </div>
+            <div className="passWord">
+                <p className="passWord-text">pass word(5文字以上)</p>
+                <input type="password" className="passWord-input" {...register('password',{
+                    required:{value:true,message:"パスワードを設定してください。"},
+                minLength:{value:5,
+                    message:"パスワードは５文字以上で設定してください。"}
+                })}/>
+                <p>{errors.password && errors.password.message}</p>
+            </div>
+            <input type="submit" className="button" value="Sign Up"/>
+
+            <input type="file"/>
+        </form>
         </>
     );
 }
