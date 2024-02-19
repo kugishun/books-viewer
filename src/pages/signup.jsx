@@ -1,17 +1,70 @@
-import { useState,useRef } from "react";
+import { useState} from "react";
 import {useForm} from "react-hook-form";
+import Compressor from "compressorjs";
+import '../CSS/signup.css';
+import { Navigate } from "react-router-dom";
 
 
 const Signup =()=>{
-    // const [email,setEmail] = useState();
-    // const [pass,setPass] = useState();
+
     const { register, handleSubmit,formState: { errors } } = useForm();
-    const onSubmit = (data) =>alert(JSON.stringify(data));
+    const onSubmit = (data) =>{
+        console.log(picture.length)
+        if(picture.length === 0){
+            setErrPicture("アイコンを設定してください");
+        }
+        alert(JSON.stringify(data))
+    };
 
-    const fileInput = useRef<HTMLInputElement | null>(null);
-    const [fileName, setFileName] = useState("");
-    const [imageData, setImageData] = useState("");
+    // const fileInput = useRef<HTMLInputElement | null>(null);
+    // const [fileName, setFileName] = useState("");
+    // const [imageData, setImageData] = useState("");
 
+
+    const [picture, setPicture] = useState([]);
+    const [errPicture,setErrPicture] = useState([]);
+
+    const hundleChange=(e)=>{
+
+        console.log("This is e.target.files")
+        console.log(e.target.files)
+        const file = e.target.files[0];
+        if(!file){
+            return;
+        }
+
+        new Compressor(file,{
+            maxHeight: 150,
+            maxWidth:150,
+            convertTypes: 'image/png',
+            success(result){
+                console.log("Compressor is success")
+                console.log(result);
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const compressedDataUrl = reader.result;
+                    if (typeof compressedDataUrl !== "string") {
+                        console.log("result is not correct type")
+                        return;
+                    }
+                    console.log(compressedDataUrl)
+                    console.log([compressedDataUrl])
+                    setPicture([compressedDataUrl]);//[]で囲うと画像データとして認識される
+                };
+                reader.readAsDataURL(result);
+            },
+            error(err){
+                console.log(err.message);
+                setErrPicture(err.message);
+
+            }
+        })
+    // }
+    }
+
+    const onClickLigin =()=>{
+        Navigate("/login");
+    }
 
     return(
         <>
@@ -45,10 +98,20 @@ const Signup =()=>{
                 })}/>
                 <p>{errors.password && errors.password.message}</p>
             </div>
+            <div>
+                <input type="file" accept="image/jpeg, image/png" onChange={hundleChange}></input>
+                <div>
+                    <p>画像プレビュー</p>
+                    <div>
+                        {picture.length!==0 && <img className="preview" src={picture[0]}/>}
+                        <p>{errPicture && errPicture}</p>
+                    </div>
+                </div>
+            </div>
             <input type="submit" className="button" value="Sign Up"/>
-
-            <input type="file"/>
         </form>
+        <p></p>
+        <button onClick={onClickLigin}>ログインページに移動</button>
         </>
     );
 }
