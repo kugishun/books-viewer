@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -32,11 +33,11 @@ const Home = () => {
       <p></p>
       <button onClick={onClickSignUp}>Signup</button>
       <p></p>
-      <button onClick={onClickPage1}>Page1</button>
+      {/* <button onClick={onClickPage1}>Page1</button>
       <p></p>
       <button onClick={onClickPage2}>Page2</button>
       <p></p>
-      <button onClick={onClickPage404}>Page404</button>
+      <button onClick={onClickPage404}>Page404</button> */}
     </div>
   );
 };

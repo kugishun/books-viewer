@@ -1,33 +1,66 @@
 import { useState} from "react";
 import {useForm} from "react-hook-form";
 import Compressor from "compressorjs";
+import axios from 'axios';
 import '../CSS/signup.css';
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { render } from "@testing-library/react";
 
 
 const Signup =()=>{
 
+    const navigate = useNavigate();
+    const [picture, setPicture] = useState([]);
+    const [imageUrl,setImageUrl] = useState()
+    const [errPicture,setErrPicture] = useState([]);
+    const [errorMessage,setErrorMessage] = useState();
+    const [errorIcon,setErrorIcon] = useState();
+
     const { register, handleSubmit,formState: { errors } } = useForm();
+
     const onSubmit = (data) =>{
         console.log(picture.length)
+
+        // const icon = {
+        //     iconUrl: picture,
+        // };
+        const form = new FormData();
+        form.append('icon',picture);
+
+        console.log("this is icon")
+        console.log(form);
         if(picture.length === 0){
             setErrPicture("アイコンを設定してください");
+            return;
         }
-        alert(JSON.stringify(data))
-    };
-
-    // const fileInput = useRef<HTMLInputElement | null>(null);
-    // const [fileName, setFileName] = useState("");
-    // const [imageData, setImageData] = useState("");
-
-
-    const [picture, setPicture] = useState([]);
-    const [errPicture,setErrPicture] = useState([]);
+        console.log(JSON.stringify(data))
+        console.log(picture)
+        axios.post('https://railway.bookreview.techtrain.dev/users',data)
+        .then((response) => {
+            // console.log(response.data.token);
+            setErrorMessage("");
+            ////アイコンのpost
+            axios.post('https://railway.bookreview.techtrain.dev/uploads',form,{
+                headers:{
+                    "Content-Type": 'multipart/form-data',
+                    "Authorization": `Bearer ${response.data.token}`
+                }
+            })
+            .then(() =>{
+                setErrorIcon("");
+            })
+            .catch((err)=>{
+                setErrorIcon(`アイコンの登録に失敗しました。${err}`);
+            });
+            ////
+        })
+        .catch((err)=>{
+            setErrorMessage(`ユーザーの作成に失敗しました。${err}`);
+        });
+    }
 
     const hundleChange=(e)=>{
 
-        console.log("This is e.target.files")
-        console.log(e.target.files)
         const file = e.target.files[0];
         if(!file){
             return;
@@ -37,21 +70,12 @@ const Signup =()=>{
             maxHeight: 150,
             maxWidth:150,
             convertTypes: 'image/png',
-            success(result){
+            success(result){//画像のリサイズが成功している
                 console.log("Compressor is success")
                 console.log(result);
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const compressedDataUrl = reader.result;
-                    if (typeof compressedDataUrl !== "string") {
-                        console.log("result is not correct type")
-                        return;
-                    }
-                    console.log(compressedDataUrl)
-                    console.log([compressedDataUrl])
-                    setPicture([compressedDataUrl]);//[]で囲うと画像データとして認識される
-                };
-                reader.readAsDataURL(result);
+                setPicture(result);
+                const url = URL.createObjectURL(result)
+                setImageUrl(url);
             },
             error(err){
                 console.log(err.message);
@@ -59,11 +83,10 @@ const Signup =()=>{
 
             }
         })
-    // }
     }
 
     const onClickLigin =()=>{
-        Navigate("/login");
+        navigate("/login");
     }
 
     return(
@@ -75,7 +98,6 @@ const Signup =()=>{
                 <input type="text" className="userName-input" {...register('name',{
                     required: {value: true,
                         message:<p>ユーザー名の登録は必須です。</p>},
-                    onChange: (e)=>console.log(e)
                 })}/>
                 <p>{errors.name && errors.name.message}</p>
             </div>
@@ -103,17 +125,20 @@ const Signup =()=>{
                 <div>
                     <p>画像プレビュー</p>
                     <div>
-                        {picture.length!==0 && <img className="preview" src={picture[0]}/>}
+                        {picture.length!==0 && <img className="preview" src={imageUrl}/>}
                         <p>{errPicture && errPicture}</p>
                     </div>
                 </div>
             </div>
             <input type="submit" className="button" value="Sign Up"/>
         </form>
+            <p>{errorMessage}</p>
+            <p>{errorIcon}</p>
         <p></p>
         <button onClick={onClickLigin}>ログインページに移動</button>
         </>
     );
 }
+
 
 export default Signup;

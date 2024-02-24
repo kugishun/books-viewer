@@ -1,14 +1,27 @@
+import axios from "axios";
 import { useState} from "react";
 import {useForm} from "react-hook-form";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login =()=>{
 
     const { register, handleSubmit,formState: { errors } } = useForm();
-    const onSubmit = (data) =>alert(JSON.stringify(data));
+    const [errorMessage,setErrorMessage] = useState();
+
+    const onSubmit = (data) =>{
+        axios.post('https://railway.bookreview.techtrain.dev/signin',data)
+        .then(()=>{
+            setErrorMessage();
+            
+        })
+        .catch((err)=>{
+            setErrorMessage(err);
+        })
+    }
+    const navigate = useNavigate();
 
     const onClickSignUp =()=>{
-        Navigate("/signup");
+        navigate("/signup");
     }
 
     return(
