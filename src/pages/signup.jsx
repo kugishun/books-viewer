@@ -4,8 +4,6 @@ import Compressor from "compressorjs";
 import axios from 'axios';
 import '../CSS/signup.css';
 import { Navigate, useNavigate } from "react-router-dom";
-import { render } from "@testing-library/react";
-
 
 const Signup =()=>{
 
