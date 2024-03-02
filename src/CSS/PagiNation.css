@@ -1,0 +1,12 @@
+.PagiChange{
+    text-align: center;
+}
+
+.PagiChange__button{
+    display: inline-block;
+}
+
+.PagiChange__text{
+    margin:0 1em;
+    display: inline-block;
+}

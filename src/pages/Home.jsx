@@ -5,6 +5,7 @@ import '../CSS/home.css';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポート
 import { Button } from "react-bootstrap";
+import PagiNation from "./PagiNation";
 // import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
 
 const Home = () => {
@@ -23,14 +24,14 @@ const Home = () => {
   //   window.open(url);
   // }
 
-  const upPage =()=> {
+  const upPagi =()=> {
     const newOffset = offset+10;
     setOffest(newOffset);
     // console.log(offset);
     upDate(newOffset);
   }
 
-  const downPage=()=>{
+  const downPagi=()=>{
     if(offset>0){
       const newOffset = offset-10;
       setOffest(newOffset);
@@ -51,7 +52,7 @@ const Home = () => {
       setBookLists(response.data);
       console.log(response.data.length);
       if(!response.data.length){
-        downPage();
+        downPagi();
       }
     })
     .catch((err)=>{
@@ -91,12 +92,7 @@ const Home = () => {
     })
       }
     </div>
-    <div className="Home__offsetChange">
-      <Button className="Home__offsetChange__button btn-secondary" onClick={downPage}>&lt;</Button>
-      <p className="Home__offsetChange__text font-size-S">{offset+1}</p>
-      <Button className="Home__offsetChange__button btn-secondary" onClick={upPage}>&gt;</Button>
-    </div>
-
+      <PagiNation offset={offset} downPagi={downPagi} upPagi={upPagi} />
       <button className="Home__button" onClick={onClickLogin}>Login</button>
       <p></p>
       <button className="Home__button" onClick={onClickSignUp}>Signup</button>
