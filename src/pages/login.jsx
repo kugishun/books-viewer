@@ -1,18 +1,23 @@
 import axios from "axios";
 import { useState} from "react";
 import {useForm} from "react-hook-form";
+import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポート
+import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
 
 const Login =()=>{
 
     const { register, handleSubmit,formState: { errors } } = useForm();
     const [errorMessage,setErrorMessage] = useState();
+    const [_,setCookie] = useCookies();
 
     const onSubmit = (data) =>{
         axios.post('https://railway.bookreview.techtrain.dev/signin',data)
-        .then(()=>{
+        .then((response)=>{
             setErrorMessage();
-            
+            setCookie("token",response.data.token);
+            navigate('/')
         })
         .catch((err)=>{
             setErrorMessage(err);
@@ -48,9 +53,10 @@ const Login =()=>{
                 <p>{errors.password && errors.password.message}</p>
             </div>
             <input type="submit" className="button" value="Login"/>
+            <p>{errorMessage}</p>
             </form>
             <p></p>
-        <button onClick={onClickSignUp}>ログインページに移動</button>
+        <Button  variant="link" onClick={onClickSignUp}>ログインページに移動</Button>
         </>
     )
 

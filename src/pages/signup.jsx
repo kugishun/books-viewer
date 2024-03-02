@@ -1,9 +1,10 @@
 import { useState} from "react";
 import {useForm} from "react-hook-form";
+import { useCookies } from "react-cookie";
 import Compressor from "compressorjs";
 import axios from 'axios';
 import '../CSS/signup.css';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup =()=>{
 
@@ -13,6 +14,7 @@ const Signup =()=>{
     const [errPicture,setErrPicture] = useState([]);
     const [errorMessage,setErrorMessage] = useState();
     const [errorIcon,setErrorIcon] = useState();
+    const [_,setCookie] = useCookies();
 
     const { register, handleSubmit,formState: { errors } } = useForm();
 
@@ -35,7 +37,7 @@ const Signup =()=>{
         console.log(picture)
         axios.post('https://railway.bookreview.techtrain.dev/users',data)
         .then((response) => {
-            // console.log(response.data.token);
+            console.log(response.data.token);
             setErrorMessage("");
             ////アイコンのpost
             axios.post('https://railway.bookreview.techtrain.dev/uploads',form,{
@@ -46,6 +48,8 @@ const Signup =()=>{
             })
             .then(() =>{
                 setErrorIcon("");
+                setCookie("token",response.data.token);
+                navigate('/')
             })
             .catch((err)=>{
                 setErrorIcon(`アイコンの登録に失敗しました。${err}`);
