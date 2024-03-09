@@ -1,15 +1,19 @@
 import { useNavigate} from "react-router-dom";
 import {useCookies} from "react-cookie";
 import React,{useEffect, useState} from "react";
+import { useDispatch } from "react-redux";
 import '../CSS/home.css';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポート
-import { Button } from "react-bootstrap";
+import { Button, Nav } from "react-bootstrap";
+
 import PagiNation from "./PagiNation";
+import { signOut } from "../authSlice";
 // import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onClickLogin = () =>{
     navigate("/login");
@@ -28,7 +32,7 @@ const Home = () => {
     const newOffset = offset+10;
     setOffest(newOffset);
     // console.log(offset);
-    upDate(newOffset);
+    // upDate(newOffset);
   }
 
   const downPagi=()=>{
@@ -36,28 +40,8 @@ const Home = () => {
       const newOffset = offset-10;
       setOffest(newOffset);
       // console.log(offset);
-      upDate(newOffset);
+      // upDate(newOffset);
     }
-  }
-
-  const upDate=(newOffset)=>{
-    console.log(newOffset);
-    axios
-    .get(`https://railway.bookreview.techtrain.dev/books?offset=${newOffset}`,{
-      headers: {
-        authorization: `Bearer ${cookies.token}`,
-      },
-    })
-    .then((response)=>{
-      setBookLists(response.data);
-      console.log(response.data.length);
-      if(!response.data.length){
-        downPagi();
-      }
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
   }
 
   const [cookies] = useCookies();
@@ -65,20 +49,35 @@ const Home = () => {
   const [offset,setOffest] = useState(0);
 
   useEffect(() =>{
-    axios
-    .get(`https://railway.bookreview.techtrain.dev/books?offset=${offset}`,{
-      headers: {
-        authorization: `Bearer ${cookies.token}`,
-      },
-    })
-    .then((response)=>{
-      setBookLists(response.data) ;
-    })
-  },[]);
+    if(cookies.token){
+      console.log("token existe: "+cookies.token);
+      axios
+      .get(`https://railway.bookreview.techtrain.dev/books?offset=${offset}`,{
+        headers: {
+          authorization: `Bearer ${cookies.token}`,
+        },
+      })
+      .then((response)=>{
+        setBookLists(response.data);
+        if(!response.data.length){
+          downPagi();
+        }
+      })
+      .catch((err)=>{
+        console.log(err);
+        axios
+      .get(`https://railway.bookreview.techtrain.dev/public/books?offset=${offset}`)
+      .then((response)=>{
+        setBookLists(response.data);
+        dispatch(signOut());
+        })
+      })
+    }
+    },[offset]);
 
   return (
     <div className="Home">
-      <h1>Home Page</h1>
+      <Nav></Nav>
     <div className="Home-bookLists">{bookLists.map((bookList)=>{
       return(
         <div className="bookList">

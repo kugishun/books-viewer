@@ -1,6 +1,9 @@
 import { useState} from "react";
 import {useForm} from "react-hook-form";
+import { Navigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { signIn } from "../authSlice";
 import Compressor from "compressorjs";
 import axios from 'axios';
 import '../CSS/signup.css';
@@ -17,6 +20,8 @@ const Signup =()=>{
     const [_,setCookie] = useCookies();
 
     const { register, handleSubmit,formState: { errors } } = useForm();
+    const auth = useSelector((state) => state.auth.isSignIn);
+    const dispatch = useDispatch();
 
     const onSubmit = (data) =>{
         console.log(picture.length)
@@ -49,6 +54,7 @@ const Signup =()=>{
             .then(() =>{
                 setErrorIcon("");
                 setCookie("token",response.data.token);
+                dispatch(signIn());
                 navigate('/')
             })
             .catch((err)=>{
@@ -59,6 +65,8 @@ const Signup =()=>{
         .catch((err)=>{
             setErrorMessage(`ユーザーの作成に失敗しました。${err}`);
         });
+
+        if (auth) return <Navigate to="/" replace />;
     }
 
     const hundleChange=(e)=>{

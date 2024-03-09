@@ -9,12 +9,15 @@ import TestPost from "./pages/testPost";
 import Page404 from "./pages/Page404";
 
 export default function App(){
+
+  const auth = useSelector((state) => state.auth.isSignIn);
+
     return(
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="signup" element={<Signup />}/>
           <Route path="/" element={<Home />} />
+          <Route exact path="/login" element={auth ? <Home />:<Login />} />
+          <Route exact path="signup" element={auth ? <Home />:<Signup />}/>
           <Route path="/Page1" element={<Page1 />} />
           <Route path="/Page2" element={<Page2 />} />
           <Route path="/testPost" element={<TestPost/>}/>
