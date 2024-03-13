@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import {useForm} from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -22,6 +22,11 @@ const Signup =()=>{
     const { register, handleSubmit,formState: { errors } } = useForm();
     const auth = useSelector((state) => state.auth.isSignIn);
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        console.log(auth)
+        if(auth) {navigate('/')}
+    },[auth])
 
     const onSubmit = (data) =>{
         console.log(picture.length)

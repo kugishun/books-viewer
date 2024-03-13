@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import { useCookies } from "react-cookie";
 import { useNavigate ,Navigate } from "react-router-dom";
@@ -15,6 +15,13 @@ const Login =()=>{
     const [_,setCookie] = useCookies();
     const auth = useSelector((state) => state.auth.isSignIn);
     const dispatch = useDispatch();
+
+
+    useEffect(()=>{
+        console.log(auth)
+        console.log("aaaaaaaaaaaaaaaaa")
+        if(auth) {navigate('/')}
+    },[auth])
 
     const onSubmit = (data) =>{
         axios.post('https://railway.bookreview.techtrain.dev/signin',data)

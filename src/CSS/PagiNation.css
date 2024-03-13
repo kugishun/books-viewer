@@ -1,5 +1,7 @@
 .PagiChange{
+    /* background-color: aqua; */
     text-align: center;
+    padding: 1em 0;
 }
 
 .PagiChange__button{

@@ -1,0 +1,47 @@
+/*基準を1rem=10pxに設定*/
+html {
+    font-size: 62.5%;
+}
+
+/*最小値:1.1rem → 可変（0.9rem + 0.625vw（画面幅320px:2px, 800px:5px, 1200px:7.5px））→ 最大値:1.6rem*/
+.font-size-S {
+    font-size: clamp(1.1rem, calc(0.9rem + 0.625vw), 1.6rem);
+}
+
+/*最小値:1.2rem → 可変（1rem + 0.625vw（画面幅320px:2px, 800px:5px, 1200px:7.5px））→ 最大値:1.7rem*/
+.font-size-M {
+    font-size: clamp(1.2rem, calc(1rem + 0.625vw), 1.7rem);
+}
+
+/*最小値:1.6rem → 可変（2.2rem + 0.625vw（画面幅320px:2px, 800px:5px, 1200px:7.5px））→ 最大値:2.9rem*/
+.font-size-L {
+    font-size: clamp(2.4rem, calc(2.2rem + 0.625vw), 2.9rem);
+}
+
+.profile{
+    width: 95%;
+    height: 100%;
+    margin: 2% auto;
+    background-color: aqua;
+}
+
+.profile__image{
+    border-radius: 15px;
+}
+
+.profile__changeName{
+    text-align: center;
+}
+
+.profile__changeName__nowName{
+    display: inline-block;
+    width:auto;
+}
+
+.profile__chnageName__changeButton{
+    display: inline-block;
+}
+
+.profile__saveButton__button{
+    margin: 0.5em 0.5em;
+}
