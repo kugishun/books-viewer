@@ -102,6 +102,10 @@ const Home = () => {
       navigate('/login')
     }
 
+    const newPost=()=>{
+      navigate('/newPost')
+    }
+
   return (
     <div>
     <Navbar expand="lg" bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
@@ -111,7 +115,7 @@ const Home = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
           {auth?
-            <Nav.Link>新規登録</Nav.Link>
+            <Nav.Link onClick={newPost}>新規登録</Nav.Link>
             :
             <></>
           }

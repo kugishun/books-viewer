@@ -6,6 +6,7 @@ import Page1 from "./pages/Page1";
 import Page2 from "./pages/Page2";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import NewPost from "./pages/newPost";
 import TestPost from "./pages/testPost";
 import Page404 from "./pages/Page404";
 
@@ -19,6 +20,7 @@ export default function App(){
           <Route path="/" element={<Home />} />
           <Route exact path="/login" element={auth ?<Navigate to="/"/>:<Login />} />
           <Route exact path="/signup" element={auth ?<Navigate to="/" />:<Signup />}/>
+          <Route exact path="/newPost" element={auth ?<NewPost/>:<Navigate to="login"/>}/>
           <Route path="/profile" element={<Profile/>} />
           <Route path="/Page1" element={<Page1 />} />
           <Route path="/Page2" element={<Page2 />} />

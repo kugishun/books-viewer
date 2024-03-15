@@ -2,11 +2,10 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from "react-bootstrap";
-import { use } from "chai";
 
 const NewPost = () =>{
 
-    const {register, hundleSubmit,formState:{errors}} = useForm();
+    const {register, handleSubmit,formState:{errors}} = useForm();
     const onSubmit = ()=>{
         const form = new FormData();
     }
@@ -14,7 +13,7 @@ const NewPost = () =>{
     return(
         <>
         <h1>This is NewPost Page</h1>
-        <form onSubmit={hundleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <div className="">
                 <div>
                     <p>タイトル</p>
