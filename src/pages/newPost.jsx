@@ -1,13 +1,25 @@
 import React from "react";
 import {useForm} from "react-hook-form";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import { Button } from "react-bootstrap";
+import axios from "axios";
 
 const NewPost = () =>{
 
+    const [cookies] = useCookies();
+    const navigate = useNavigate();
+
     const {register, handleSubmit,formState:{errors}} = useForm();
-    const onSubmit = ()=>{
-        const form = new FormData();
+    const onSubmit = (data)=>{
+        axios.post('https://railway.bookreview.techtrain.dev/books',data,{
+            headers:{
+                Authorization: `Bearer ${cookies.token}`,
+            },
+        }).then((response)=>{
+            navigate("/");
+        })
     }
 
     return(

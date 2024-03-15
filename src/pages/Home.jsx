@@ -83,6 +83,10 @@ const Home = () => {
     }
     },[offset]);
 
+    const moveDetail=(id)=>{
+      
+    }
+
     const setting = () =>{
       navigate('/profile');
     }
@@ -152,7 +156,9 @@ const Home = () => {
       <div className="Home-bookLists">{bookLists.map((bookList)=>{
         return(
           <div className="bookList" key={bookList.id}>
-            <p className="bookList__title font-size-L">{bookList.title}</p>
+            <div >
+              <p className="bookList__title font-size-L">{bookList.title}</p>
+            </div>
             <p className="bookList__url font-size-S">URL: <a target="_blank" href={`${bookList.url}`}>{bookList.url}</a></p>
             <p className="bookList__detail font-size-M">{bookList.detail}</p>
             <p className="bookList__review font-size-M">{bookList.review}</p>
