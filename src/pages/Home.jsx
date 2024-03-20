@@ -33,9 +33,10 @@ const Home = () => {
     }
   }
 
-  const [cookies, _, removeCookiee] = useCookies();
+  const [cookies, _, removeCookie] = useCookies();
   const [bookLists,setBookLists] = useState([]);
   const [offset,setOffest] = useState(0);
+  const [errLogs,setErrLogs] = useState();
 
   useEffect(() =>{
     if(cookies.token){
@@ -68,7 +69,7 @@ const Home = () => {
       .get(`https://railway.bookreview.techtrain.dev/public/books?offset=${offset}`)
       .then((response)=>{
         setBookLists(response.data);
-        removeCookiee("token")
+        removeCookie("token")
         dispatch(signOut());
         })
       })
@@ -84,7 +85,19 @@ const Home = () => {
     },[offset]);
 
     const moveDetail=(id)=>{
-      
+      const data = {
+        selectBookId: id,
+      }
+      axios
+      .post(`https://railway.bookreview.techtrain.dev/logs`,data,{
+        headers:{
+          authorization: `Bearer ${cookies.token}`
+        }
+      }).catch((err)=>{
+        setErrLogs(err);
+        console.log(err);
+      })
+      navigate(`/detail/${id}`);
     }
 
     const setting = () =>{
@@ -100,10 +113,10 @@ const Home = () => {
     }
 
     const logOut=()=>{
-      removeCookiee("token");
+      removeCookie("token");
       dispatch(signOut());
       setCheckPopOut(false);
-      navigate('/login')
+      navigate('/login');
     }
 
     const newPost=()=>{
@@ -156,7 +169,7 @@ const Home = () => {
       <div className="Home-bookLists">{bookLists.map((bookList)=>{
         return(
           <div className="bookList" key={bookList.id}>
-            <div >
+            <div onClick={()=>moveDetail(bookList.id)}>
               <p className="bookList__title font-size-L">{bookList.title}</p>
             </div>
             <p className="bookList__url font-size-S">URL: <a target="_blank" href={`${bookList.url}`}>{bookList.url}</a></p>
