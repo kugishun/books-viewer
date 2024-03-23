@@ -22,6 +22,8 @@ const Detail =()=> {
         inMine: false,
     })
 
+
+
     useEffect(()=>{
         axios.get(`https://railway.bookreview.techtrain.dev/books/${id}`,{
             headers: {
@@ -44,11 +46,14 @@ const Detail =()=> {
         })
     },[])
 
+
+
     const View = (props) =>{
         const {data} = props
         // console.log(data)
         return(
             <div className="Home">
+                <h1>This is edit page</h1>
                 <div className="bookDetail">
                     <p className="bookDetail__title font-size-L">{data.title}</p>
                     <p className="bookDetail__url font-size-S">URL: <a target="_blank" href={`${data.url}`}>{data.url}</a></p>

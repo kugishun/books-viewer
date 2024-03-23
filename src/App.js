@@ -8,6 +8,7 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 import NewPost from "./pages/newPost";
 import Detail from "./pages/detail";
+import Edit from "./pages/edit";
 import TestPost from "./pages/testPost";
 import Page404 from "./pages/Page404";
 
@@ -23,6 +24,7 @@ export default function App(){
           <Route exact path="/signup" element={auth ?<Navigate to="/" />:<Signup />} />
           <Route exact path="/newPost" element={auth ?<NewPost />:<Navigate to="login" />} />
           <Route path="/detail/:id?" element={<Detail />} />
+          <Route path="edit/:id?" element={<Edit />}/>
           <Route path="/profile" element={<Profile />} />
           <Route path="/Page1" element={<Page1 />} />
           <Route path="/Page2" element={<Page2 />} />

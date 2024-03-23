@@ -1,39 +1,67 @@
-import React from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import axios from "axios";
 
-const NewPost = () => {
-  const [cookies] = useCookies();
-  const navigate = useNavigate();
-
+const Edit = () => {
+  const { id } = useParams();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+  const [cookie] = useCookies();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(
+          `https://railway.bookreview.techtrain.dev/books/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookie.token}`,
+            },
+          }
+        );
+        const response = res.data;
+        if (response.isMine === undefined) navigate("/");
+        console.log(response.isMine);
+        setValue("title", response.title);
+        setValue("url", response.url);
+        setValue("detail", response.detail);
+        setValue("review", response.review);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [id]);
+
   const onSubmit = (data) => {
     axios
-      .post("https://railway.bookreview.techtrain.dev/books", data, {
+      .put(`https://railway.bookreview.techtrain.dev/books/${id}`, data, {
         headers: {
-          Authorization: `Bearer ${cookies.token}`,
+          Authorization: `Bearer ${cookie.token}`,
         },
       })
       .then((response) => {
         navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
   return (
-    <>
-      <h1>This is NewPost Page</h1>
+    <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="">
           <div>
-            <p>タイトル</p>
+            <label>タイトル</label>
             <input
               type="text"
               {...register("title", {
@@ -43,7 +71,7 @@ const NewPost = () => {
             <p>{errors.title && errors.title.message}</p>
           </div>
           <div>
-            <p>Url</p>
+            <label>Url</label>
             <input
               type="url"
               {...register("url", {
@@ -53,7 +81,7 @@ const NewPost = () => {
             <p>{errors.url && errors.url.message}</p>
           </div>
           <div>
-            <p>詳細</p>
+            <label>詳細</label>
             <textarea
               cols="40"
               rows="8"
@@ -64,7 +92,7 @@ const NewPost = () => {
             <p>{errors.detail && errors.detail.message}</p>
           </div>
           <div>
-            <p>レビュー</p>
+            <label>レビュー</label>
             <textarea
               cols="40"
               rows="8"
@@ -77,8 +105,8 @@ const NewPost = () => {
         </div>
         <input type="submit" value="登録" />
       </form>
-    </>
+    </div>
   );
 };
 
-export default NewPost;
+export default Edit;
